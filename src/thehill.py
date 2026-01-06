@@ -193,7 +193,12 @@ def parse_dish_ingredients(soup: Tag) -> List[MunchIngredient]:
 def parse_dish_nutrition(soup: Tag) -> MunchNutrition:
     mn: dict[str, int | float | MunchNutritionEntry] = dict()
     # Serving Size
-    mn["servingSize"] = float(soup.find_all(string=True, recursive=False)[0].strip().replace("oz", ""))
+    # mn["servingSize"] = float(soup.find_all(string=True, recursive=False)[0].strip().replace("oz", ""))
+    text = soup.find_all(string=True, recursive=False)[0].strip().lower()
+    if text.endswith("lb"):
+        mn["servingSize"] = round(float(text.replace("lb", "").strip()) * 16, 2)
+    elif text.endswith("oz"):
+        mn["servingSize"] = float(text.replace("oz", "").strip())
     # Calories
     cal_parent = soup.select_one("p.single-calories")
     mn["calories"] = int(cal_parent.get_text(strip=True).lower().replace("calories", ""))
