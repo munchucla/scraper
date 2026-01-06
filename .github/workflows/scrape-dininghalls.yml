@@ -36,7 +36,7 @@ jobs:
       - name: Run scraper
         run: |
           mkdir -p data
-          uv run python src/thehill.py
+          uv run python -m src.thehill
 
       - name: Commit and push results
         run: |

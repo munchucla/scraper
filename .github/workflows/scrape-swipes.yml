@@ -35,7 +35,7 @@ jobs:
       - name: Run scraper
         run: |
           mkdir -p data
-          uv run python src/mealswipes.py
+          uv run python -m src.mealswipes
 
       - name: Commit and push results
         run: |
