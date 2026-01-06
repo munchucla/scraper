@@ -2,7 +2,7 @@
 import json
 import os
 
-from .models import *
+from src.models import *
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 

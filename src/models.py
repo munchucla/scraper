@@ -41,11 +41,11 @@ class MunchNutrition(BaseModel):
     calcium: MunchNutritionEntry
     iron: MunchNutritionEntry
     potassium: MunchNutritionEntry
-    vA: Optional[MunchNutritionEntry]
-    vB6: Optional[MunchNutritionEntry]
-    vB12: Optional[MunchNutritionEntry]
-    vC: Optional[MunchNutritionEntry]
-    vD: Optional[MunchNutritionEntry]
+    vA: Optional[MunchNutritionEntry] = None
+    vB6: Optional[MunchNutritionEntry] = None
+    vB12: Optional[MunchNutritionEntry] = None
+    vC: Optional[MunchNutritionEntry] = None
+    vD: Optional[MunchNutritionEntry] = None
     calories: Annotated[int, Field(strict=True, ge=0)]
 
 
@@ -102,6 +102,9 @@ class InternalMunchLocationHours(BaseModel):
     Dinner: Optional[InternalMunchLocationHoursEntry] = None
     Late_Night: Optional[InternalMunchLocationHoursEntry] = Field(
             default=None, alias="Late Night"
+    )
+    All_Day: Optional[InternalMunchLocationHoursEntry] = Field(
+            default=None, alias="All Day"
     )
 
     class Config:

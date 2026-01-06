@@ -6,8 +6,8 @@ import re
 
 from bs4 import BeautifulSoup, Tag
 
-from .models import *
-from .util import *
+from src.models import *
+from src.util import *
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')

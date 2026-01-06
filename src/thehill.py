@@ -9,8 +9,8 @@ from zoneinfo import ZoneInfo
 
 from bs4 import BeautifulSoup, Tag
 
-from .models import *
-from .util import *
+from src.models import *
+from src.util import *
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
@@ -21,21 +21,21 @@ MEAL_FILE_PREFIX = os.path.join(DATA_DIR, "meals")
 MEAL_CACHE_FILE = os.path.join(MEAL_FILE_PREFIX, "_cache.json")
 
 MEAL_EXCLUSION_LIST: List[int] = []
-MEAL_CACHE: dict[int, int] = {}
+MEAL_CACHE: dict[str, int] = {}
 
 BASE_URL = "https://dining.ucla.edu"
 LOCATIONS = {
-    "Bruin Plate": ["/bruin-plate", 865],
-    "De Neve": ["/de-neve-dining", 866],
-    "Epicuria": ["/epicuria-at-covel", 864],
-    "Bruin Bowl": ["/bruin-bowl", 868],
-    "Bruin Cafe": ["/bruin-cafe", 867],
-    "Café 1919": ["/cafe-1919", 873],
+    # "Bruin Plate": ["/bruin-plate", 865],
+    # "De Neve": ["/de-neve-dining", 866],
+    # "Epicuria": ["/epicuria-at-covel", 864],
+    # "Bruin Bowl": ["/bruin-bowl", 868],
+    # "Bruin Cafe": ["/bruin-cafe", 867],
+    # "Café 1919": ["/cafe-1919", 873],
     "Epic @ Ackerman": ["/epicuria-at-ackerman", 874],
-    "Feast": ["/spice-kitchen", 872],
-    "Rendezvous": ["/rendezvous", 870],
-    "The Drey": ["/the-drey", 869],
-    "The Study": ["/the-study-at-hedrick", 871],
+    # "Feast": ["/spice-kitchen", 872],
+    # "Rendezvous": ["/rendezvous", 870],
+    # "The Drey": ["/the-drey", 869],
+    # "The Study": ["/the-study-at-hedrick", 871],
 }
 
 ZERO_MUNCH_NUTRITION = MunchNutrition(
@@ -164,8 +164,12 @@ def parse_dish_ingredients(soup: Tag) -> List[MunchIngredient]:
     p_text = p.get_text(strip=True)
     if p_text == "Ingredients:":
         ul = soup.select_one("ul.nolispace")
-        for li in ul.select("li"):
-            raw_ingredients.append(li)
+        if not ul:
+            p.decompose()
+            raw_ingredients.append(soup.select_one("#ingredient_list > p"))
+        else:
+            for li in ul.select("li"):
+                raw_ingredients.append(li)
     else:
         raw_ingredients.append(p)
     for ri in raw_ingredients:
@@ -275,12 +279,16 @@ def parse_location_dishes(soup: Tag) -> List[int]:
             allergens = [label.get("title").strip().title() for label in allergen_labels.select("img")]
         link_to_meal_details = BASE_URL + dish.select_one("div.see-menu-details a").get("href").strip()
         # Format https://dining.ucla.edu/menu-item/?recipe=7361
-        dish_id = int(link_to_meal_details.split("?recipe=")[1] or 0)
+        dish_id = 0
+        if "?recipe=" in link_to_meal_details:
+            dish_id = int(link_to_meal_details.split("?recipe=")[1] or 0)
+        elif "?ingredient=" in link_to_meal_details:
+            dish_id = int(link_to_meal_details.split("?ingredient=")[1] or 0)
         dish_path = os.path.join(DATA_DIR, "meals", f"{dish_id}.json")
-        if dish_id not in MEAL_CACHE or MEAL_CACHE[dish_id] is None:
-            MEAL_CACHE[dish_id] = 0
-        if os.path.exists(dish_path) and (dish_id not in MEAL_EXCLUSION_LIST) and (abs(MEAL_CACHE[dish_id] - int(time.time())) < 60*60*24*15):
-            pass
+        if str(dish_id) not in MEAL_CACHE or MEAL_CACHE[str(dish_id)] is None:
+            MEAL_CACHE[str(dish_id)] = 0
+        if os.path.exists(dish_path) and (dish_id not in MEAL_EXCLUSION_LIST) and (abs(MEAL_CACHE[str(dish_id)] - int(time.time())) < 60*60*24*15):
+            logging.info(f"CACHE HIT for meal #{dish_id}")
         else:
             meal_details_bowl = BeautifulSoup(fetch(link_to_meal_details), "html.parser")
             dish_ingredients: List[MunchIngredient] = list()
@@ -311,7 +319,7 @@ def parse_location_dishes(soup: Tag) -> List[int]:
             )
             with open(dish_path, "w") as f:
                 f.write(dish.model_dump_json())
-                MEAL_CACHE[dish_id] = int(time.time())
+                MEAL_CACHE[str(dish_id)] = int(time.time())
         dishes.append(dish_id)
     return dishes
 
@@ -367,8 +375,8 @@ def parse_location_meal_periods(soup: BeautifulSoup, hours: InternalMunchLocatio
                 dumped = hours.model_dump()
                 meal_period = MunchMealPeriod(
                         name=label_text.title(),  # scraping_info[meal]["label"],
-                        startTime=dumped[meal]["startTime"],
-                        endTime=dumped[meal]["endTime"],
+                        startTime=dumped[meal]["startTime"] if meal != "All Day" else MunchTime(h=12, m=0, z="AM"),
+                        endTime=dumped[meal]["endTime"] if meal != "All Day" else MunchTime(h=11, m=59, z="PM"),
                         stations=stations
                 )
                 periods.append(meal_period)
