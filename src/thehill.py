@@ -333,6 +333,10 @@ def parse_location_stations(soup: Tag) -> List[MunchStationMenu]:
 def parse_location_meal_periods(soup: BeautifulSoup, hours: InternalMunchLocationHours) -> List[MunchMealPeriod]:
     periods = []
     scraping_info = {
+        "All Day": {
+            "selector": "#alldaymenu.anchor-float",
+            "label": "All Day"
+        },
         "Breakfast": {
             "selector": "#breakfastmenu.anchor-float",
             "label": "Breakfast"
