@@ -25,17 +25,17 @@ MEAL_CACHE: dict[str, int] = {}
 
 BASE_URL = "https://dining.ucla.edu"
 LOCATIONS = {
-    # "Bruin Plate": ["/bruin-plate", 865],
-    # "De Neve": ["/de-neve-dining", 866],
-    # "Epicuria": ["/epicuria-at-covel", 864],
+    "Bruin Plate": ["/bruin-plate", 865],
+    "De Neve": ["/de-neve-dining", 866],
+    "Epicuria": ["/epicuria-at-covel", 864],
     "Bruin Bowl": ["/bruin-bowl", 868],
-    # "Bruin Cafe": ["/bruin-cafe", 867],
-    # "Café 1919": ["/cafe-1919", 873],
-    # "Epic @ Ackerman": ["/epicuria-at-ackerman", 874],
-    # "Feast": ["/spice-kitchen", 872],
-    # "Rendezvous": ["/rendezvous", 870],
-    # "The Drey": ["/the-drey", 869],
-    # "The Study": ["/the-study-at-hedrick", 871],
+    "Bruin Cafe": ["/bruin-cafe", 867],
+    "Café 1919": ["/cafe-1919", 873],
+    "Epic @ Ackerman": ["/epicuria-at-ackerman", 874],
+    "Feast": ["/spice-kitchen", 872],
+    "Rendezvous": ["/rendezvous", 870],
+    "The Drey": ["/the-drey", 869],
+    "The Study": ["/the-study-at-hedrick", 871],
 }
 
 ZERO_MUNCH_NUTRITION = MunchNutrition(
