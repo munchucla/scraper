@@ -82,7 +82,7 @@ ZERO_MUNCH_NUTRITION = MunchNutrition(
 
 PORK_MATCHES = [
     "pork", "porcine", "hog", "swine", "pig",
-    "bacon", "ham", "prosciutto", "pancetta", "guanciale",
+    "bacon", "ham", "prosciutto", "pancetta", "guanciale",  # "turkey bacon" is so annoying
     "lard", "gelatin",
     "char siu", "tonkotsu", "chashu"
 ]
@@ -109,7 +109,7 @@ def generate_extra_labels(name: str) -> List[LABEL]:
     labels: List[LABEL] = []
     name = name.lower().strip()
     # Check for pork or gelatin or ham or any pig-stuff
-    if bool(re.search(rf"\b({'|'.join(map(re.escape, PORK_MATCHES))})\b", name, re.I)):
+    if bool(re.search(rf"\b({'|'.join(map(re.escape, PORK_MATCHES))})\b", name, re.I)) and "turkey bacon" not in name:
         labels.append("Pork")
     # Check for any beef products
     if bool(re.search(rf"\b({'|'.join(map(re.escape, BEEF_MATCHES))})\b", name, re.I)):
