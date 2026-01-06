@@ -199,6 +199,8 @@ def parse_dish_nutrition(soup: Tag) -> MunchNutrition:
         mn["servingSize"] = round(float(text.replace("lb", "").strip()) * 16, 2)
     elif text.endswith("oz"):
         mn["servingSize"] = float(text.replace("oz", "").strip())
+    else:
+        mn["servingSize"] = round(float("".join(c for c in text if c.isdigit())))
     # Calories
     cal_parent = soup.select_one("p.single-calories")
     mn["calories"] = int(cal_parent.get_text(strip=True).lower().replace("calories", ""))
