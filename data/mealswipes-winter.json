@@ -1,0 +1,53 @@
+[
+	{
+		"amt": 19,
+		"type": "P",
+		"startPeriod": 5,
+		"startDate": {
+			"y": 2026,
+			"m": 1,
+			"d": 4
+		},
+		"endPeriod": 3,
+		"endDate": {
+			"y": 2026,
+			"m": 3,
+			"d": 20
+		},
+		"totalSwipes": 205
+	},
+	{
+		"amt": 14,
+		"type": "P",
+		"startPeriod": 5,
+		"startDate": {
+			"y": 2026,
+			"m": 1,
+			"d": 4
+		},
+		"endPeriod": 3,
+		"endDate": {
+			"y": 2026,
+			"m": 3,
+			"d": 20
+		},
+		"totalSwipes": 151
+	},
+	{
+		"amt": 11,
+		"type": "P",
+		"startPeriod": 5,
+		"startDate": {
+			"y": 2026,
+			"m": 1,
+			"d": 4
+		},
+		"endPeriod": 3,
+		"endDate": {
+			"y": 2026,
+			"m": 3,
+			"d": 20
+		},
+		"totalSwipes": 121
+	}
+]

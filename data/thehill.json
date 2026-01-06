@@ -1,0 +1,740 @@
+[
+	{
+		"name": "Bruin Plate",
+		"id": 865,
+		"type": "Restaurant",
+		"dates": [
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 4
+				},
+				"periods": [
+					{
+						"name": "Dinner",
+						"startTime": {
+							"h": 5,
+							"m": 0,
+							"z": "PM"
+						},
+						"endTime": {
+							"h": 9,
+							"m": 0,
+							"z": "PM"
+						},
+						"stations": []
+					}
+				]
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 5
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 6
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 7
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 8
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 9
+				},
+				"periods": []
+			}
+		]
+	},
+	{
+		"name": "De Neve",
+		"id": 866,
+		"type": "Dining Hall",
+		"dates": [
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 4
+				},
+				"periods": [
+					{
+						"name": "Dinner",
+						"startTime": {
+							"h": 5,
+							"m": 0,
+							"z": "PM"
+						},
+						"endTime": {
+							"h": 9,
+							"m": 0,
+							"z": "PM"
+						},
+						"stations": []
+					},
+					{
+						"name": "Late_Night",
+						"startTime": {
+							"h": 10,
+							"m": 0,
+							"z": "PM"
+						},
+						"endTime": {
+							"h": 12,
+							"m": 0,
+							"z": "AM"
+						},
+						"stations": []
+					}
+				]
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 5
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 6
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 7
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 8
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 9
+				},
+				"periods": []
+			}
+		]
+	},
+	{
+		"name": "Epicuria",
+		"id": 864,
+		"type": "Dining Hall",
+		"dates": [
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 4
+				},
+				"periods": [
+					{
+						"name": "Dinner",
+						"startTime": {
+							"h": 5,
+							"m": 0,
+							"z": "PM"
+						},
+						"endTime": {
+							"h": 9,
+							"m": 0,
+							"z": "PM"
+						},
+						"stations": []
+					}
+				]
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 5
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 6
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 7
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 8
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 9
+				},
+				"periods": []
+			}
+		]
+	},
+	{
+		"name": "Bruin Bowl",
+		"id": 868,
+		"type": "Restaurant",
+		"dates": [
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 4
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 5
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 6
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 7
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 8
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 9
+				},
+				"periods": []
+			}
+		]
+	},
+	{
+		"name": "Bruin Cafe",
+		"id": 867,
+		"type": "Restaurant",
+		"dates": [
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 4
+				},
+				"periods": [
+					{
+						"name": "Dinner",
+						"startTime": {
+							"h": 5,
+							"m": 0,
+							"z": "PM"
+						},
+						"endTime": {
+							"h": 9,
+							"m": 0,
+							"z": "PM"
+						},
+						"stations": []
+					}
+				]
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 5
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 6
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 7
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 8
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 9
+				},
+				"periods": []
+			}
+		]
+	},
+	{
+		"name": "Caf\u00e9 1919",
+		"id": 873,
+		"type": "Restaurant",
+		"dates": [
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 4
+				},
+				"periods": [
+					{
+						"name": "Lunch",
+						"startTime": {
+							"h": 11,
+							"m": 0,
+							"z": "AM"
+						},
+						"endTime": {
+							"h": 2,
+							"m": 0,
+							"z": "PM"
+						},
+						"stations": []
+					}
+				]
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 5
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 6
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 7
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 8
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 9
+				},
+				"periods": []
+			}
+		]
+	},
+	{
+		"name": "Epic @ Ackerman",
+		"id": 874,
+		"type": "Restaurant",
+		"dates": [
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 4
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 5
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 6
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 7
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 8
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 9
+				},
+				"periods": []
+			}
+		]
+	},
+	{
+		"name": "Feast",
+		"id": 872,
+		"type": "Restaurant",
+		"dates": [
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 4
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 5
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 6
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 7
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 8
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 9
+				},
+				"periods": []
+			}
+		]
+	},
+	{
+		"name": "Rendezvous",
+		"id": 870,
+		"type": "Restaurant",
+		"dates": [
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 4
+				},
+				"periods": [
+					{
+						"name": "Dinner",
+						"startTime": {
+							"h": 5,
+							"m": 0,
+							"z": "PM"
+						},
+						"endTime": {
+							"h": 9,
+							"m": 0,
+							"z": "PM"
+						},
+						"stations": []
+					}
+				]
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 5
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 6
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 7
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 8
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 9
+				},
+				"periods": []
+			}
+		]
+	},
+	{
+		"name": "The Drey",
+		"id": 869,
+		"type": "Restaurant",
+		"dates": [
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 4
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 5
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 6
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 7
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 8
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 9
+				},
+				"periods": []
+			}
+		]
+	},
+	{
+		"name": "The Study",
+		"id": 871,
+		"type": "Restaurant",
+		"dates": [
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 4
+				},
+				"periods": [
+					{
+						"name": "Dinner",
+						"startTime": {
+							"h": 5,
+							"m": 0,
+							"z": "PM"
+						},
+						"endTime": {
+							"h": 9,
+							"m": 0,
+							"z": "PM"
+						},
+						"stations": []
+					},
+					{
+						"name": "Late_Night",
+						"startTime": {
+							"h": 9,
+							"m": 0,
+							"z": "PM"
+						},
+						"endTime": {
+							"h": 12,
+							"m": 0,
+							"z": "AM"
+						},
+						"stations": []
+					}
+				]
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 5
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 6
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 7
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 8
+				},
+				"periods": []
+			},
+			{
+				"date": {
+					"y": 2026,
+					"m": 1,
+					"d": 9
+				},
+				"periods": []
+			}
+		]
+	}
+]
