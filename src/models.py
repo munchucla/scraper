@@ -66,7 +66,8 @@ class MunchDish(BaseModel):
 
 class MunchStationMenu(BaseModel):
     name: str
-    dishes: List[MunchDish] = Field(min_length=1)
+    # dishes: List[MunchDish] = Field(min_length=1)
+    dishes: List[int] = Field(min_length=0)
 
 
 class MunchMealPeriod(BaseModel):

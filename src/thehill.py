@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import re
+import time
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -16,6 +17,11 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(me
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 OUT_FILE = os.path.join(DATA_DIR, "thehill.json")
+MEAL_FILE_PREFIX = os.path.join(DATA_DIR, "meals")
+MEAL_CACHE_FILE = os.path.join(MEAL_FILE_PREFIX, "_cache.json")
+
+MEAL_EXCLUSION_LIST: List[int] = []
+MEAL_CACHE: dict[int, int] = {}
 
 BASE_URL = "https://dining.ucla.edu"
 LOCATIONS = {
@@ -257,7 +263,7 @@ def parse_dish_nutrition(soup: Tag) -> MunchNutrition:
     return safe_parse(MunchNutrition, mn) or ZERO_MUNCH_NUTRITION
 
 
-def parse_location_dishes(soup: Tag) -> List[MunchDish]:
+def parse_location_dishes(soup: Tag) -> List[int]:
     dishes = []
     for dish in soup.select("section.recipe-card"):
         name = dish.select_one("div.menu-item-title div.ucla-prose h3").get_text(strip=True).replace("w/ ",
@@ -270,34 +276,43 @@ def parse_location_dishes(soup: Tag) -> List[MunchDish]:
         link_to_meal_details = BASE_URL + dish.select_one("div.see-menu-details a").get("href").strip()
         # Format https://dining.ucla.edu/menu-item/?recipe=7361
         dish_id = int(link_to_meal_details.split("?recipe=")[1] or 0)
-        meal_details_bowl = BeautifulSoup(fetch(link_to_meal_details), "html.parser")
-        dish_ingredients: List[MunchIngredient] = list()
-        dish_nutrition: MunchNutrition
-        scg = meal_details_bowl.select_one(".single-complex-grid")
-        if scg:
-            lis = scg.select("li")
-            for li in lis:
-                text = li.select_one("a").get_text(strip=True)
-                sub_allergens = list(
-                    map(lambda x: x.get("title").strip().title(), li.select("img"))) + generate_extra_labels(text)
-                dish_ingredients.append(MunchIngredient(name=text, labels=sub_allergens))
-            # nutrition_div = meal_details_bowl.select_one("div#nutrition")
-            dish_nutrition = ZERO_MUNCH_NUTRITION
+        dish_path = os.path.join(DATA_DIR, "meals", f"{dish_id}.json")
+        if dish_id not in MEAL_CACHE or MEAL_CACHE[dish_id] is None:
+            MEAL_CACHE[dish_id] = 0
+        if os.path.exists(dish_path) and (dish_id not in MEAL_EXCLUSION_LIST) and (abs(MEAL_CACHE[dish_id] - int(time.time())) < 60*60*24*15):
+            pass
         else:
-            dish_ingredients = parse_dish_ingredients(meal_details_bowl.select_one("div#ingredient_list"))
-            dish_nutrition = parse_dish_nutrition(meal_details_bowl.select_one("div#nutrition"))
-        for ingredient in dish_ingredients:
-            for label in ingredient.labels:
-                if label not in allergens:
-                    allergens.append(label)
-        dish = MunchDish(
-                name=name,
-                id=dish_id,
-                labels=allergens,
-                ingredients=dish_ingredients,
-                nutrition=dish_nutrition,
-        )
-        dishes.append(dish)
+            meal_details_bowl = BeautifulSoup(fetch(link_to_meal_details), "html.parser")
+            dish_ingredients: List[MunchIngredient] = list()
+            dish_nutrition: MunchNutrition
+            scg = meal_details_bowl.select_one(".single-complex-grid")
+            if scg:
+                lis = scg.select("li")
+                for li in lis:
+                    text = li.select_one("a").get_text(strip=True)
+                    sub_allergens = list(
+                        map(lambda x: x.get("title").strip().title(), li.select("img"))) + generate_extra_labels(text)
+                    dish_ingredients.append(MunchIngredient(name=text, labels=sub_allergens))
+                # nutrition_div = meal_details_bowl.select_one("div#nutrition")
+                dish_nutrition = ZERO_MUNCH_NUTRITION
+            else:
+                dish_ingredients = parse_dish_ingredients(meal_details_bowl.select_one("div#ingredient_list"))
+                dish_nutrition = parse_dish_nutrition(meal_details_bowl.select_one("div#nutrition"))
+            for ingredient in dish_ingredients:
+                for label in ingredient.labels:
+                    if label not in allergens:
+                        allergens.append(label)
+            dish = MunchDish(
+                    name=name,
+                    id=dish_id,
+                    labels=allergens,
+                    ingredients=dish_ingredients,
+                    nutrition=dish_nutrition,
+            )
+            with open(dish_path, "w") as f:
+                f.write(dish.model_dump_json())
+                MEAL_CACHE[dish_id] = int(time.time())
+        dishes.append(dish_id)
     return dishes
 
 
@@ -308,6 +323,9 @@ def parse_location_stations(soup: Tag) -> List[MunchStationMenu]:
         menu = station.select_one("div.recipe-list")
         if menu:
             dishes = parse_location_dishes(menu)
+            # for dish in dishes:
+            #     with open(os.path.join(DATA_DIR, "meals", f"{dish.id}.json"), "w") as f:
+            #         f.write(dish.model_dump_json())
             stations.append(MunchStationMenu(name=name, dishes=dishes))
     return stations
 
@@ -421,6 +439,10 @@ def parse_location_dates(soup: BeautifulSoup) -> List[MunchDate]:
 
 
 def parse_locations() -> List[MunchLocation]:
+    global MEAL_CACHE
+    with open(MEAL_CACHE_FILE, "r") as f:
+        MEAL_CACHE = json.load(f)
+
     locations = []
 
     for loc_name, loc_data in LOCATIONS.items():
@@ -488,6 +510,9 @@ def parse_locations() -> List[MunchLocation]:
 
         except Exception:
             logging.exception(f"Error parsing location {loc_name}")
+
+    with open(MEAL_CACHE_FILE, "w") as f:
+        f.write(json.dumps(MEAL_CACHE))
 
     return locations
 
