@@ -19,9 +19,13 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 OUT_FILE = os.path.join(DATA_DIR, "thehill.json")
 MEAL_FILE_PREFIX = os.path.join(DATA_DIR, "meals")
 MEAL_CACHE_FILE = os.path.join(MEAL_FILE_PREFIX, "_cache.json")
+MEALCLUSTERS_FILE_PREFIX = os.path.join(DATA_DIR, "mealclusters")
+MEALCLUSTERS_CACHE_FILE = os.path.join(MEALCLUSTERS_FILE_PREFIX, "_cache.json")
 
 MEAL_EXCLUSION_LIST: List[int] = []
 MEAL_CACHE: dict[str, int] = {}
+MEAL_CACHE_INVALIDATIONS: List[int] = []
+MEALCLUSTERS_CACHE: dict[int, List[int]] = {}
 
 BASE_URL = "https://dining.ucla.edu"
 LOCATIONS = {
@@ -327,6 +331,7 @@ def parse_location_dishes(soup: Tag) -> List[int]:
             with open(dish_path, "w") as f:
                 f.write(dish.model_dump_json())
                 MEAL_CACHE[str(dish_id)] = int(time.time())
+                MEAL_CACHE_INVALIDATIONS.append(dish_id)
         dishes.append(dish_id)
     return dishes
 
@@ -458,13 +463,20 @@ def parse_location_dates(soup: BeautifulSoup) -> List[MunchDate]:
 
 
 def parse_locations() -> List[MunchLocation]:
-    global MEAL_CACHE
+    global MEAL_CACHE, MEALCLUSTERS_CACHE
+
     with open(MEAL_CACHE_FILE, "r") as f:
         MEAL_CACHE = json.load(f)
+
+    # with open(MEALCLUSTERS_CACHE_FILE, "r") as f:
+    #     MEALCLUSTERS_CACHE = json.load(f)
 
     locations = []
 
     for loc_name, loc_data in LOCATIONS.items():
+        if loc_data[1] not in MEALCLUSTERS_CACHE:
+            MEALCLUSTERS_CACHE[loc_data[1]] = []
+
         try:
             loc_url = BASE_URL + loc_data[0]
             soup = BeautifulSoup(fetch(loc_url), "html.parser")
@@ -491,7 +503,7 @@ def parse_locations() -> List[MunchLocation]:
                 dates = [MunchDate(y=today.year, m=today.month, d=today.day)]
 
             # Loop over each date >= today and parse meal periods
-            location_dates = []
+            location_dates: list[MunchLocationDate] = []
             for date in dates:
                 if date.d >= today.day:
                     if hours is None:
@@ -529,12 +541,49 @@ def parse_locations() -> List[MunchLocation]:
             location = safe_parse(MunchLocation, location_data)
             if location:
                 locations.append(location)
+                MEALCLUSTERS_CACHE[loc_data[1]] = list(set([
+                    dish
+                    for mld in location_dates
+                    for period in mld.periods
+                    for station in period.stations
+                    for dish in station.dishes
+                ]))
 
         except Exception:
             logging.exception(f"Error parsing location {loc_name}")
 
+    for hall_id, hall_dish_ids in MEALCLUSTERS_CACHE.items():
+        cluster_path = os.path.join(MEALCLUSTERS_FILE_PREFIX, f"{hall_id}.json")
+        cluster: Optional[List[MunchDish]] = None
+
+        if os.path.exists(cluster_path):
+            for invalidated_id in MEAL_CACHE_INVALIDATIONS:
+                if invalidated_id in hall_dish_ids:
+                    # recompile this entire hall_id cluster
+                    # cluster.append(next((item for item in MEAL_CACHE if item["id"] == invalidated_id), None))
+                    # cluster = [dish for dish in MEAL_CACHE if dish["id"] in hall_dish_ids]
+                    cluster = []
+                    for cached_meal_id in MEALCLUSTERS_CACHE[hall_id]:
+                        with open(os.path.join(MEAL_CACHE, f"{cached_meal_id}.json"), "r") as f:
+                            cluster.append(json.load(f))
+                    break
+            cluster = [x for x in cluster if x is not None] if cluster is not None else None
+        else:
+            cluster = []
+            for cached_meal_id in MEALCLUSTERS_CACHE[hall_id]:
+                with open(os.path.join(MEAL_FILE_PREFIX, f"{cached_meal_id}.json"), "r") as f:
+                    cluster.append(json.load(f))
+            # cluster = [dish for dish in MEAL_CACHE if dish["id"] in hall_dish_ids]
+
+        if cluster is not None:
+            with open(cluster_path, "w") as f:
+                f.write(json.dumps(cluster))
+
     with open(MEAL_CACHE_FILE, "w") as f:
         f.write(json.dumps(MEAL_CACHE))
+
+    with open(MEALCLUSTERS_CACHE_FILE, "w") as f:
+        f.write(json.dumps(MEALCLUSTERS_CACHE))
 
     return locations
 
