@@ -190,7 +190,7 @@ def parse_dish_ingredients(soup: Tag) -> List[MunchIngredient]:
         ingredient_name = sanitize_name(ingredient_name)
         labels = list(set(labels)) + generate_extra_labels(ingredient_name)
         # paragraph += f"{ingredient_name} ({', '.join(labels)})"
-        parsed_ingredients.append(MunchIngredient(name=ingredient_name, labels=labels))
+        parsed_ingredients.append(MunchIngredient(name=ingredient_name, labels=sorted(labels)))
     return parsed_ingredients
 
 
@@ -311,7 +311,7 @@ def parse_location_dishes(soup: Tag) -> List[int]:
                     text = li.select_one("a").get_text(strip=True)
                     sub_allergens = list(
                         map(lambda x: x.get("title").strip().title(), li.select("img"))) + generate_extra_labels(text)
-                    dish_ingredients.append(MunchIngredient(name=text, labels=sub_allergens))
+                    dish_ingredients.append(MunchIngredient(name=text, labels=sorted(sub_allergens)))
                 # nutrition_div = meal_details_bowl.select_one("div#nutrition")
                 dish_nutrition = ZERO_MUNCH_NUTRITION
             else:
@@ -324,7 +324,7 @@ def parse_location_dishes(soup: Tag) -> List[int]:
             dish = MunchDish(
                     name=name,
                     id=dish_id,
-                    labels=allergens,
+                    labels=sorted(allergens),
                     ingredients=dish_ingredients,
                     nutrition=dish_nutrition,
             )
