@@ -564,7 +564,7 @@ def parse_locations() -> List[MunchLocation]:
                     # cluster = [dish for dish in MEAL_CACHE if dish["id"] in hall_dish_ids]
                     cluster = []
                     for cached_meal_id in MEALCLUSTERS_CACHE[hall_id]:
-                        with open(os.path.join(MEAL_CACHE, f"{cached_meal_id}.json"), "r") as f:
+                        with open(os.path.join(MEAL_CACHE_FILE, f"{cached_meal_id}.json"), "r") as f:
                             cluster.append(json.load(f))
                     break
             cluster = [x for x in cluster if x is not None] if cluster is not None else None
