@@ -385,10 +385,12 @@ def parse_location_meal_periods(soup: BeautifulSoup, hours: InternalMunchLocatio
             if menu_bowl:
                 stations = parse_location_stations(menu_bowl)
                 dumped = hours.model_dump()
+                if dumped is None or dumped.get(meal) is None:
+                    continue
                 meal_period = MunchMealPeriod(
                         name=label_text.title(),  # scraping_info[meal]["label"],
-                        startTime=dumped[meal]["startTime"] if meal != "All Day" else MunchTime(h=12, m=0, z="AM"),
-                        endTime=dumped[meal]["endTime"] if meal != "All Day" else MunchTime(h=11, m=59, z="PM"),
+                        startTime=dumped.get(meal)["startTime"] if meal != "All Day" else MunchTime(h=12, m=0, z="AM"),
+                        endTime=dumped.get(meal)["endTime"] if meal != "All Day" else MunchTime(h=11, m=59, z="PM"),
                         stations=stations
                 )
                 periods.append(meal_period)
@@ -509,8 +511,10 @@ def parse_locations() -> List[MunchLocation]:
                     if hours is None:
                         continue  # Need to fix/redo for Bruin Bowl
 
-                    location_date_soup = BeautifulSoup(fetch(loc_url + f"?date={date.y}-{date.m}-{date.d}"),
-                                                       "html.parser")
+                    raw_html = fetch(loc_url + f"?date={date.y}-{date.m}-{date.d}")
+                    if loc_data[1] == 868:
+                        raw_html = raw_html.replace('breakfastmenu', 'dinnermenu')
+                    location_date_soup = BeautifulSoup(raw_html, "html.parser")
                     location_date_periods = parse_location_meal_periods(location_date_soup, hours)
 
                     # verify we at least have what "hours" specifices for today
