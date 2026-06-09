@@ -370,7 +370,7 @@ def parse_location_meal_periods(soup: BeautifulSoup, hours: InternalMunchLocatio
             "label": "Dinner"
         },
         "Late Night": {
-            "selector": "#overnightmenu.anchor-float",
+            "selector": "#latenightmenu.anchor-float",
             "label": "Late Night"
         }
     }
@@ -384,8 +384,11 @@ def parse_location_meal_periods(soup: BeautifulSoup, hours: InternalMunchLocatio
             menu_bowl = meal_period.select_one(".wp-block-columns.alignwide .at-a-glance-menu__dining-location")
             if menu_bowl:
                 stations = parse_location_stations(menu_bowl)
-                dumped = hours.model_dump()
-                if dumped is None or dumped.get(meal) is None:
+                # All Day uses synthetic 12am–11:59pm times, so the hours model
+                # need not carry an entry for it. Every other meal still needs
+                # the hours-derived start/end times.
+                dumped = hours.model_dump() if hours is not None else {}
+                if meal != "All Day" and dumped.get(meal) is None:
                     continue
                 meal_period = MunchMealPeriod(
                         name=label_text.title(),  # scraping_info[meal]["label"],
