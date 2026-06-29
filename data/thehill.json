@@ -1,1 +1,1 @@
-[{"name": "De Neve", "id": 866, "type": "Dining Hall", "dates": []}, {"name": "Caf\u00e9 1919", "id": 873, "type": "Restaurant", "dates": []}]
+[{"name": "De Neve", "id": 866, "type": "Dining Hall", "dates": []}, {"name": "Caf\u00e9 1919", "id": 873, "type": "Restaurant", "dates": [{"date": {"y": 2026, "m": 6, "d": 29}, "periods": [{"name": "Breakfast", "startTime": {"h": 9, "m": 0, "z": "AM"}, "endTime": {"h": 11, "m": 0, "z": "AM"}, "stations": []}, {"name": "Lunch", "startTime": {"h": 11, "m": 0, "z": "AM"}, "endTime": {"h": 2, "m": 0, "z": "PM"}, "stations": []}]}]}]
