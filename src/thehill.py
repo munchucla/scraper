@@ -29,9 +29,9 @@ MEALCLUSTERS_CACHE: dict[int, List[int]] = {}
 
 BASE_URL = "https://dining.ucla.edu"
 LOCATIONS = {
-    "Bruin Plate": ["/bruin-plate", 865],
+    "Bruin Plate": ["/sproul-dining", 865],
     "De Neve": ["/de-neve-dining", 866],
-    "Epicuria": ["/epicuria-at-covel", 864],
+    "Epicuria": ["/covel-dining-2", 864],
     "Bruin Bowl": ["/bruin-bowl", 868],
     "Bruin Cafe": ["/bruin-cafe", 867],
     "Café 1919": ["/cafe-1919", 873],
