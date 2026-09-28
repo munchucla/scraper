@@ -4,7 +4,7 @@ import logging
 import os
 import re
 import time
-from datetime import datetime
+from datetime import date as Date, datetime
 from zoneinfo import ZoneInfo
 
 from bs4 import BeautifulSoup, Tag
@@ -510,7 +510,11 @@ def parse_locations() -> List[MunchLocation]:
             # Loop over each date >= today and parse meal periods
             location_dates: list[MunchLocationDate] = []
             for date in dates:
-                if date.d >= today.day:
+                # Compare whole dates: the select spans a month boundary at the
+                # end of every month, and comparing day numbers alone drops
+                # every date in the next month.
+                day = Date(date.y, date.m, date.d)
+                if day >= today.date():
                     if hours is None:
                         continue  # Need to fix/redo for Bruin Bowl
 
@@ -521,7 +525,7 @@ def parse_locations() -> List[MunchLocation]:
                     location_date_periods = parse_location_meal_periods(location_date_soup, hours)
 
                     # verify we at least have what "hours" specifices for today
-                    if date.d == today.day and len(location_date_periods) == 0:
+                    if day == today.date() and len(location_date_periods) == 0:
                         if hours is not None:
                             for k, v in hours.model_dump().items():
                                 if v is not None:
