@@ -183,6 +183,12 @@ def parse_dish_ingredients(soup: Tag) -> List[MunchIngredient]:
             if str_text.startswith("Ingredients:"):
                 strong.decompose()
                 continue
+            # Allergen labels are the bold "(Soy,Wheat,Eggs)" group. Other bold
+            # text, like the "Filling:" / "Wrapper:" sub-headings some recipes
+            # use, is not a label list.
+            if not (str_text.startswith("(") and str_text.endswith(")")):
+                strong.decompose()
+                continue
             for lbl in str_text[1:-1].split(","):
                 labels.append(lbl.strip())
             strong.decompose()
