@@ -281,14 +281,22 @@ def parse_dish_nutrition(soup: Tag) -> MunchNutrition:
 def parse_location_dishes(soup: Tag) -> List[int]:
     dishes = []
     for dish in soup.select("section.recipe-card"):
-        name = dish.select_one("div.menu-item-title div.ucla-prose h3").get_text(strip=True).replace("w/ ",
+        # UCLA sometimes renders an empty card (no title, no details link) in
+        # a station. Skip it rather than letting one blank card fail the
+        # whole location.
+        title = dish.select_one("div.menu-item-title div.ucla-prose h3")
+        details = dish.select_one("div.see-menu-details a")
+        if title is None or details is None:
+            logging.warning("Skipping recipe card with no title or details link")
+            continue
+        name = title.get_text(strip=True).replace("w/ ",
                                                                                                      "w/").replace("w/",
                                                                                                                    "w/ ")
         allergen_labels = dish.select_one("div.menu-item-meta-data")
         allergens = []
         if allergen_labels:
             allergens = [label.get("title").strip().title() for label in allergen_labels.select("img")]
-        link_to_meal_details = BASE_URL + dish.select_one("div.see-menu-details a").get("href").strip()
+        link_to_meal_details = BASE_URL + details.get("href").strip()
         # Format https://dining.ucla.edu/menu-item/?recipe=7361
         dish_id = 0
         if "?recipe=" in link_to_meal_details:
