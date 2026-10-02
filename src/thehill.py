@@ -4,7 +4,7 @@ import logging
 import os
 import re
 import time
-from datetime import datetime
+from datetime import date as Date, datetime
 from zoneinfo import ZoneInfo
 
 from bs4 import BeautifulSoup, Tag
@@ -183,6 +183,12 @@ def parse_dish_ingredients(soup: Tag) -> List[MunchIngredient]:
             if str_text.startswith("Ingredients:"):
                 strong.decompose()
                 continue
+            # Allergen labels are the bold "(Soy,Wheat,Eggs)" group. Other bold
+            # text, like the "Filling:" / "Wrapper:" sub-headings some recipes
+            # use, is not a label list.
+            if not (str_text.startswith("(") and str_text.endswith(")")):
+                strong.decompose()
+                continue
             for lbl in str_text[1:-1].split(","):
                 labels.append(lbl.strip())
             strong.decompose()
@@ -281,14 +287,22 @@ def parse_dish_nutrition(soup: Tag) -> MunchNutrition:
 def parse_location_dishes(soup: Tag) -> List[int]:
     dishes = []
     for dish in soup.select("section.recipe-card"):
-        name = dish.select_one("div.menu-item-title div.ucla-prose h3").get_text(strip=True).replace("w/ ",
+        # UCLA sometimes renders an empty card (no title, no details link) in
+        # a station. Skip it rather than letting one blank card fail the
+        # whole location.
+        title = dish.select_one("div.menu-item-title div.ucla-prose h3")
+        details = dish.select_one("div.see-menu-details a")
+        if title is None or details is None:
+            logging.warning("Skipping recipe card with no title or details link")
+            continue
+        name = title.get_text(strip=True).replace("w/ ",
                                                                                                      "w/").replace("w/",
                                                                                                                    "w/ ")
         allergen_labels = dish.select_one("div.menu-item-meta-data")
         allergens = []
         if allergen_labels:
             allergens = [label.get("title").strip().title() for label in allergen_labels.select("img")]
-        link_to_meal_details = BASE_URL + dish.select_one("div.see-menu-details a").get("href").strip()
+        link_to_meal_details = BASE_URL + details.get("href").strip()
         # Format https://dining.ucla.edu/menu-item/?recipe=7361
         dish_id = 0
         if "?recipe=" in link_to_meal_details:
@@ -510,7 +524,11 @@ def parse_locations() -> List[MunchLocation]:
             # Loop over each date >= today and parse meal periods
             location_dates: list[MunchLocationDate] = []
             for date in dates:
-                if date.d >= today.day:
+                # Compare whole dates: the select spans a month boundary at the
+                # end of every month, and comparing day numbers alone drops
+                # every date in the next month.
+                day = Date(date.y, date.m, date.d)
+                if day >= today.date():
                     if hours is None:
                         continue  # Need to fix/redo for Bruin Bowl
 
@@ -521,7 +539,7 @@ def parse_locations() -> List[MunchLocation]:
                     location_date_periods = parse_location_meal_periods(location_date_soup, hours)
 
                     # verify we at least have what "hours" specifices for today
-                    if date.d == today.day and len(location_date_periods) == 0:
+                    if day == today.date() and len(location_date_periods) == 0:
                         if hours is not None:
                             for k, v in hours.model_dump().items():
                                 if v is not None:
