@@ -401,7 +401,7 @@ def parse_location_meal_periods(soup: BeautifulSoup, hours: InternalMunchLocatio
                 # All Day uses synthetic 12am–11:59pm times, so the hours model
                 # need not carry an entry for it. Every other meal still needs
                 # the hours-derived start/end times.
-                dumped = hours.model_dump() if hours is not None else {}
+                dumped = hours.model_dump(by_alias=True) if hours is not None else {}
                 if meal != "All Day" and dumped.get(meal) is None:
                     continue
                 meal_period = MunchMealPeriod(
@@ -544,7 +544,7 @@ def parse_locations() -> List[MunchLocation]:
                     # verify we at least have what "hours" specifices for today
                     if day == today.date() and len(location_date_periods) == 0:
                         if hours is not None:
-                            for k, v in hours.model_dump().items():
+                            for k, v in hours.model_dump(by_alias=True).items():
                                 if v is not None:
                                     location_date_periods.append(MunchMealPeriod(
                                             name=k,
