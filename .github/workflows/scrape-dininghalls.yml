@@ -51,6 +51,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update scraped halls [automated]"
+            git commit -m "Update scraped halls [automated] $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
             git push
           fi
